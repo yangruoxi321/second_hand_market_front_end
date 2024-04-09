@@ -32,12 +32,13 @@ function Register(props) {
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
-    const { username, password } = values;
+    const { email, userName, password } = values;
     const opt = {
       method: "POST",
       url: `${BASE_URL}/signup`,
       data: {
-        username: username,
+        email: email,
+        userName: userName,
         password: password,
       },
       headers: { "content-type": "application/json" },
@@ -54,7 +55,7 @@ function Register(props) {
       })
       .catch((error) => {
         console.log("register failed: ", error.message);
-        message.error("Registration failed!");
+        message.error(error.message);
         // throw new Error('Signup Failed!')
       });
   };
@@ -67,13 +68,27 @@ function Register(props) {
       onFinish={onFinish}
       className="register"
     >
+
       <Form.Item
-        name="username"
-        label="Username"
+          name="Email"
+          label="Email"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Email!",
+            },
+          ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="userName"
+        label="userName"
         rules={[
           {
             required: true,
-            message: "Please input your Username!",
+            message: "Please input your userName!",
           },
         ]}
       >
