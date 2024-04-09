@@ -37,17 +37,17 @@ function Login(props) {
   return (
     <Form name="normal_login" className="login-form" onFinish={onFinish}>
       <Form.Item
-        name="username"
+        name="email"
         rules={[
           {
             required: true,
-            message: "Please input your Username!",
+            message: "Please input your email!",
           },
         ]}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          placeholder="email"
         />
       </Form.Item>
       <Form.Item
