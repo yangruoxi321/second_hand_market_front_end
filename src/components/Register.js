@@ -48,7 +48,7 @@ function Register(props) {
       .then((response) => {
         console.log(response);
         // case1: registered success
-        if (response.status === 200) {
+        if (response.status === 201) {
           message.success("Registration succeed!");
           props.history.push("/login");
         }
@@ -70,7 +70,7 @@ function Register(props) {
     >
 
       <Form.Item
-          name="Email"
+          name="email"
           label="Email"
           rules={[
             {

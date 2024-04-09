@@ -10,13 +10,13 @@ function Login(props) {
   const { handleLoggedIn } = props;
 
   const onFinish = (values) => {
-    const { username, password } = values;
+    const { email, password } = values;
     const opt = {
       method: "POST",
-      url: `${BASE_URL}/signin`,
+      url: `${BASE_URL}/email_login`,
       data: {
-        username: username,
-        password: password,
+          email: email,
+          password: password,
       },
       headers: { "Content-Type": "application/json" },
     };
