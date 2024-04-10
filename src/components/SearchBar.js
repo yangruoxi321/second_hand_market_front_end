@@ -1,31 +1,26 @@
+import React from "react";
+import { Input } from "antd";
+import axios from "axios";
 
-import React, { useState } from "react";
-import { Input, Radio } from "antd";
-
-import { SEARCH_KEY } from "../constants";
+import { BASE_URL } from "../constants";
 
 const { Search } = Input;
 
 function SearchBar(props) {
-    const [searchType, setSearchType] = useState(SEARCH_KEY.all);
-    const [error, setError] = useState("");
-
-    const changeSearchType = (e) => {
-        const searchType = e.target.value;
-        setSearchType(searchType);
-        setError("");
-        if (searchType === SEARCH_KEY.all) {
-            props.handleSearch({ type: searchType, keyword: "" });
-        }
-    };
-
     const handleSearch = (value) => {
-        if (searchType !== SEARCH_KEY.all && value === "") {
-            setError("Please input your search keyword!");
-            return;
-        }
-        setError("");
-        props.handleSearch({ type: searchType, keyword: value });
+        props.onSearch(value);
+        axios.post(`${BASE_URL}/search`, { search: value }, {
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(res => {
+                // Handle response
+                console.log(res.data);
+                // You might want to do something with the response data, like updating the state in the parent component
+            })
+            .catch(error => {
+                console.error("Search error:", error);
+                // Handle error
+            });
     };
 
     return (
@@ -35,22 +30,10 @@ function SearchBar(props) {
                 enterButton="Search"
                 size="large"
                 onSearch={handleSearch}
-                disabled={searchType === SEARCH_KEY.all}
             />
-            <p className="error-msg">{error}</p>
-
-            <Radio.Group
-                onChange={changeSearchType}
-                value={searchType}
-                className="search-type-group"
-            >
-                <Radio value={SEARCH_KEY.all}>All</Radio>
-                <Radio value={SEARCH_KEY.keyword}>Keyword</Radio>
-                <Radio value={SEARCH_KEY.user}>User</Radio>
-            </Radio.Group>
+            {/* Removed the Radio.Group and associated logic */}
         </div>
     );
 }
 
 export default SearchBar;
-

@@ -28,7 +28,20 @@ function Home(props) {
                 console.log("Fetch error: ", err.message);
             });
     };
-
+    const handleSearch = (searchTerm) => {
+        axios.get(`${BASE_URL}/search`, {
+            params: { search: searchTerm }
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    setPosts(res.data); // Update the posts state with search results
+                }
+            })
+            .catch(err => {
+                message.error("Search failed");
+                console.log("Search error: ", err.message);
+            });
+    };
     const showPostDetails = (post) => {
         setSelectedPost(post);
         setIsModalVisible(true);
