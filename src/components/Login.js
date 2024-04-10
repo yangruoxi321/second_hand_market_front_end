@@ -24,7 +24,9 @@ function Login(props) {
       .then((res) => {
         if (res.status === 200) {
           const { data } = res;
-          handleLoggedIn(data);
+            const { token } = res.data; // Access the token here
+            localStorage.setItem('token', token); // Save the token to localStorage
+            handleLoggedIn(token); // Pass the token up to handleLoggedIn
           message.success("Login succeed! ");
         }
       })
