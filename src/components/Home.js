@@ -17,7 +17,7 @@ function Home(props) {
     }, []);
 
     const fetchPosts = () => {
-        axios.get(`${BASE_URL}/getAllPost`)
+        axios.post(`${BASE_URL}/getAllPost`)
             .then(res => {
                 if (res.status === 200) {
                     setPosts(res.data);
