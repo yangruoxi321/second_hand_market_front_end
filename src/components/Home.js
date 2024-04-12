@@ -59,31 +59,12 @@ function Home(props) {
         setIsModalVisible(false);
     };
 
-    const createPost = (postData) => {
-        const token = localStorage.getItem(TOKEN_KEY);
-        axios.post(`${BASE_URL}/create_post`, postData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    message.success('Post created successfully!');
-                    fetchPosts(); // Re-fetch posts to show the new one
-                }
-            })
-            .catch(error => {
-                message.error('Failed to create post!');
-                console.error('Failed to create post:', error);
-            });
-    };
 
     return (
         <div className="home">
             <div className="search-create-container">
                 <SearchBar onSearch={handleSearch} />
-                <CreatePostButton onCreatePost={createPost} />
+                <CreatePostButton />
             </div>
             <div className="display">
                 <Row gutter={[16, 16]}>
@@ -95,16 +76,18 @@ function Home(props) {
                             style={{cursor: 'pointer'}}
                         >
                             <div style={{marginBottom: '20px'}}>
-                                <img
-                                    src={post.url}
-                                    alt={post.itemName}
-                                    style={{
-                                        width: '100%',
-                                        height: 'auto',
-                                        maxWidth: '100%',  // 添加这一行
-                                        objectFit: 'contain'  // 添加这一行
-                                    }}
-                                />
+                                <div style={{height: '350px', overflow: 'hidden'}}>
+                                    <img
+                                        src={post.url}
+                                        alt={post.itemName}
+                                        style={{
+                                            width: 'auto',
+                                            height: '100%',
+                                            objectFit: 'contain',
+                                            objectPosition: 'center',
+                                        }}
+                                    />
+                                </div>
                                 <h4>{post.itemName || 'No Name'}</h4>
                                 <p>Price: {post.price}</p>
                             </div>
@@ -134,9 +117,7 @@ function Home(props) {
                                 style={{
                                     width: '100%',
                                     height: 'auto',
-                                    maxWidth: '100%',  // 添加这一行
-                                    objectFit: 'contain',  // 添加这一行
-                                    marginBottom: '20px'
+                                    marginBottom: '20px',
                                 }}
                             />
                             <p>Item Name: {selectedPost.itemName}</p>

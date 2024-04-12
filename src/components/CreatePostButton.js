@@ -39,11 +39,11 @@ class CreatePostButton extends Component {
                 if (res.status === 200) {
                     message.success("Post created successfully!");
                     this.setState({ visible: false, confirmLoading: false });
-                    this.props.onShowPost(); // Make sure you have passed this prop from Home
                 }
             })
             .catch((err) => {
                 console.error("Failed to create post: ", err.message);
+                console.log(err.message);
                 message.error("Failed to create post!");
                 this.setState({ confirmLoading: false });
             });
