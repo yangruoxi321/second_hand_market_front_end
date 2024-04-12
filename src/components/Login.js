@@ -10,13 +10,13 @@ function Login(props) {
   const { handleLoggedIn } = props;
 
   const onFinish = (values) => {
-    const { username, password } = values;
+    const { email, password } = values;
     const opt = {
       method: "POST",
-      url: `${BASE_URL}/signin`,
+      url: `${BASE_URL}/email_login`,
       data: {
-        username: username,
-        password: password,
+          email: email,
+          password: password,
       },
       headers: { "Content-Type": "application/json" },
     };
@@ -24,7 +24,9 @@ function Login(props) {
       .then((res) => {
         if (res.status === 200) {
           const { data } = res;
-          handleLoggedIn(data);
+            const { token } = res.data; // Access the token here
+            localStorage.setItem('token', token); // Save the token to localStorage
+            handleLoggedIn(token); // Pass the token up to handleLoggedIn
           message.success("Login succeed! ");
         }
       })
@@ -37,17 +39,17 @@ function Login(props) {
   return (
     <Form name="normal_login" className="login-form" onFinish={onFinish}>
       <Form.Item
-        name="username"
+        name="email"
         rules={[
           {
             required: true,
-            message: "Please input your Username!",
+            message: "Please input your email!",
           },
         ]}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          placeholder="email"
         />
       </Form.Item>
       <Form.Item
