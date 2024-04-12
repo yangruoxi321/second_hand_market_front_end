@@ -1,18 +1,42 @@
-import React, { useState } from 'react';
-import { Input, Form, Button, InputNumber } from 'antd';
+import React from 'react';
+import { Input, Form, Button, InputNumber, Upload, message } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 
-const PostForm = ({ onSubmit }) => {
+const PostForm = React.forwardRef((props, formRef) => {
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
-        // Check if onSubmit is a function before calling it
-        if (typeof onSubmit === 'function') {
-            onSubmit(values);
-        } else {
-            // If not, you might want to alert the developer or handle this case appropriately
-            console.error('onSubmit is not a function');
+    const onFinish = async (values) => {
+        const { itemName, itemDescription, price, uploadPost } = values;
+
+        const formData = new FormData();
+        formData.append('post', JSON.stringify({ itemName, itemDescription, price }));
+        formData.append('file', uploadPost[0].originFileObj);
+
+        try {
+            await props.onSubmit(formData);
+            form.resetFields();
+        } catch (error) {
+            console.error('Error:', error);
+            message.error('Failed to create post');
         }
     };
+
+    const normFile = (e) => {
+        console.log('Upload event:', e);
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
+    };
+
+    const handleSubmit = () => {
+        form.submit();
+    };
+
+    // 将 handleSubmit 方法暴露给父组件
+    React.useImperativeHandle(formRef, () => ({
+        handleSubmit: handleSubmit,
+    }));
 
     return (
         <Form form={form} onFinish={onFinish}>
@@ -35,12 +59,23 @@ const PostForm = ({ onSubmit }) => {
                 <InputNumber placeholder="Price" min={0} step={0.01} />
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
+                <Form.Item
+                    name="uploadPost"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    noStyle
+                    rules={[{ required: true, message: 'Please select an image!' }]}
+                >
+                    <Upload.Dragger name="files" beforeUpload={() => false}>
+                        <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                        </p>
+                        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                    </Upload.Dragger>
+                </Form.Item>
             </Form.Item>
         </Form>
     );
-};
+});
 
 export default PostForm;

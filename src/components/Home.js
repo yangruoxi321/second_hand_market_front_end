@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { message, Modal, Row, Col } from "antd";
+import {message, Modal, Row, Col, Button} from "antd";
 import axios from "axios";
 
 import SearchBar from "./SearchBar";
@@ -29,8 +29,12 @@ function Home(props) {
             });
     };
     const handleSearch = (searchTerm) => {
-        axios.get(`${BASE_URL}/search`, {
-            params: { search: searchTerm }
+        axios.post(`${BASE_URL}/search`, {
+            search: searchTerm
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
             .then(res => {
                 if (res.status === 200) {
@@ -78,29 +82,67 @@ function Home(props) {
     return (
         <div className="home">
             <div className="search-create-container">
-                <SearchBar/>
-                <CreatePostButton onShowPost={fetchPosts}/>
+                <SearchBar onSearch={handleSearch} />
+                <CreatePostButton onCreatePost={createPost} />
             </div>
             <div className="display">
-                <Row gutter={[16, 24]}>
+                <Row gutter={[16, 16]}>
                     {posts.map(post => (
-                        <Col key={post.id} span={8} onClick={() => showPostDetails(post)} style={{cursor: 'pointer'}}>
+                        <Col
+                            key={post.id}
+                            xs={24} sm={12} md={8} lg={6}
+                            onClick={() => showPostDetails(post)}
+                            style={{cursor: 'pointer'}}
+                        >
                             <div style={{marginBottom: '20px'}}>
+                                <img
+                                    src={post.url}
+                                    alt={post.itemName}
+                                    style={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        maxWidth: '100%',  // 添加这一行
+                                        objectFit: 'contain'  // 添加这一行
+                                    }}
+                                />
                                 <h4>{post.itemName || 'No Name'}</h4>
-                                {/* 这里可以添加更多帖子信息预览 */}
+                                <p>Price: {post.price}</p>
                             </div>
                         </Col>
                     ))}
                 </Row>
 
-                {/* 模态窗口显示帖子详情 */}
-                <Modal title="Post Details" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                <Modal
+                    title="Post Details"
+                    visible={isModalVisible}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>
+                            Return
+                        </Button>,
+                        <Button key="submit" type="primary" onClick={handleOk}>
+                            OK
+                        </Button>,
+                    ]}
+                >
                     {selectedPost && (
-                        <>
+                        <div>
+                            <img
+                                src={selectedPost.url}
+                                alt={selectedPost.itemName}
+                                style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    maxWidth: '100%',  // 添加这一行
+                                    objectFit: 'contain',  // 添加这一行
+                                    marginBottom: '20px'
+                                }}
+                            />
                             <p>Item Name: {selectedPost.itemName}</p>
                             <p>Description: {selectedPost.itemDescription}</p>
                             <p>Price: {selectedPost.price}</p>
-                        </>
+                        </div>
                     )}
                 </Modal>
             </div>

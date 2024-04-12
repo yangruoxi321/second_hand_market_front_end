@@ -33,7 +33,6 @@ class CreatePostButton extends Component {
         axios.post(`${BASE_URL}/create_post`, formData, {
             headers: {
                 'token': `${localStorage.getItem(TOKEN_KEY)}`,
-                'Content-Type': 'application/json',
             },
         })
             .then((res) => {
