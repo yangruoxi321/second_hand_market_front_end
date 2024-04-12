@@ -85,6 +85,7 @@ function Home(props) {
                                             height: '100%',
                                             objectFit: 'contain',
                                             objectPosition: 'center',
+                                            overflow: 'visible'
                                         }}
                                     />
                                 </div>
