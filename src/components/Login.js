@@ -9,31 +9,38 @@ import { BASE_URL } from "../constants";
 function Login(props) {
   const { handleLoggedIn } = props;
 
-  const onFinish = (values) => {
-    const { email, password } = values;
-    const opt = {
-      method: "POST",
-      url: `${BASE_URL}/email_login`,
-      data: {
-          email: email,
-          password: password,
-      },
-      headers: { "Content-Type": "application/json" },
+    const onFinish = (values) => {
+        const { email, password } = values;
+        const opt = {
+            method: "POST",
+            url: `${BASE_URL}/email_login`,
+            data: {
+                email: email,
+                password: password,
+            },
+            headers: { "Content-Type": "application/json" },
+        };
+        axios(opt)
+            .then((res) => {
+                if (res.status === 200) {
+                    const { token } = res.data; // Access the token here
+                    localStorage.setItem('token', token); // Save the token to localStorage
+                    handleLoggedIn(token); // Pass the token up to handleLoggedIn
+                    message.success("Login succeed! ");
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // 处理错误响应
+                    console.log("Login failed: ", error.response.data.message);
+                    message.error("Login failed: " + error.response.data.message);
+                } else {
+                    // 处理其他错误
+                    console.log("Login failed: ", error.message);
+                    message.error("Login failed!");
+                }
+            });
     };
-    axios(opt)
-      .then((res) => {
-        if (res.status === 200) {
-            const { token } = res.data; // Access the token here
-            localStorage.setItem('token', token); // Save the token to localStorage
-            handleLoggedIn(token); // Pass the token up to handleLoggedIn
-          message.success("Login succeed! ");
-        }
-      })
-      .catch((error) => {
-        console.log("login failed: ", error.message);
-        message.error("Login failed!");
-      });
-  };
 
   return (
     <Form name="normal_login" className="login-form" onFinish={onFinish}>
