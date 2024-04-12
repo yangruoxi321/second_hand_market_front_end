@@ -29,8 +29,8 @@ function Login(props) {
           message.success("Login succeed! ");
         }
       })
-      .catch((err) => {
-        console.log("login failed: ", err.message);
+      .catch((error) => {
+        console.log("login failed: ", error.message);
         message.error("Login failed!");
       });
   };
