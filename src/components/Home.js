@@ -73,19 +73,18 @@ function Home(props) {
                             key={post.id}
                             xs={24} sm={12} md={8} lg={6}
                             onClick={() => showPostDetails(post)}
-                            style={{cursor: 'pointer'}}
+                            style={{ cursor: 'pointer' }}
                         >
-                            <div style={{marginBottom: '20px'}}>
-                                <div style={{height: '350px', overflow: 'hidden'}}>
+                            <div style={{ marginBottom: '20px' }}>
+                                <div style={{ height: '350px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <img
                                         src={post.url}
                                         alt={post.itemName}
                                         style={{
-                                            width: 'auto',
-                                            height: '100%',
-                                            objectFit: 'contain',
-                                            objectPosition: 'center',
-                                            overflow: 'visible'
+                                            maxHeight: '100%',  // Ensures the image's maximum height is 100% of the container
+                                            maxWidth: '100%',  // Ensures the image's maximum width is 100% of the container
+                                            objectFit: 'contain',  // Ensures the image is scaled to be as large as possible without being cropped or stretched
+                                            objectPosition: 'center'
                                         }}
                                     />
                                 </div>
@@ -116,8 +115,9 @@ function Home(props) {
                                 src={selectedPost.url}
                                 alt={selectedPost.itemName}
                                 style={{
-                                    width: '100%',
-                                    height: 'auto',
+                                    maxHeight: '450px', // Adjusted for modal view to be clear and fully visible
+                                    maxWidth: '100%',
+                                    objectFit: 'contain', // Ensures the image is scaled properly within the modal
                                     marginBottom: '20px',
                                 }}
                             />
@@ -130,6 +130,8 @@ function Home(props) {
             </div>
         </div>
     );
+
+
 
 }
 
