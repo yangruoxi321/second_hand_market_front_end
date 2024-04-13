@@ -11,9 +11,9 @@
 .App-header {
   background-color: #282c34;
   min-height: 60px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   padding: 0 20px;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -30,7 +30,7 @@
 }
 
 .button-container {
-  margin-left: auto;
+  justify-self: end;
 }
 
 .App-link {
