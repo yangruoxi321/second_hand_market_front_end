@@ -89,7 +89,7 @@ function Home(props) {
                                     />
                                 </div>
                                 <h4>{post.itemName || 'No Name'}</h4>
-                                <p>Price: {post.price}</p>
+                                <p>Price: ${post.price}</p>
                             </div>
                         </Col>
                     ))}
@@ -123,7 +123,7 @@ function Home(props) {
                             />
                             <p>Item Name: {selectedPost.itemName}</p>
                             <p>Description: {selectedPost.itemDescription}</p>
-                            <p>Price: {selectedPost.price}</p>
+                            <p>Price: ${selectedPost.price}</p>
                         </div>
                     )}
                 </Modal>
