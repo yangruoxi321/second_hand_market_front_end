@@ -45,16 +45,20 @@ function Profile() {
                     <Col span={8}>
                         <Avatar size={120} src={profile.avatarUrl} />
                     </Col>
-                    <Col span={3}>
-                        <Title level={2}>{profile.userName}</Title>
-                        <Text>Email: {profile.email}</Text>
-                        <br />
-                        <Text>Wallet: ${profile.wallet}</Text>
-                        <br />
-                        <Text>
-                            Seller Rate: &nbsp;
-                        </Text>
-                        <Rate allowHalf disabled defaultValue={profile.sellerRate}/>;
+                    <Col span={8} pull={2}>
+                        <Title level={2} style={{ textAlign: "left" }}>{profile.userName}</Title>
+                        <div style={{ textAlign: "left" }}>
+                            <Text style={{ fontSize: "18px" }}>Email: {profile.email}</Text>
+                            <br />
+                            <Text style={{ fontSize: "18px" }}>Wallet: ${profile.wallet}</Text>
+                            <br />
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <Text style={{ fontSize: "18px" }}>
+                                    Seller Rate: &nbsp;
+                                </Text>
+                                <Rate allowHalf disabled defaultValue={profile.sellerRate} />
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             </Card>
