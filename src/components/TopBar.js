@@ -28,15 +28,17 @@ const Logo = styled.img`
 `;
 
 const TitleButton = styled(Button)`
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    padding: 0;
-    height: auto;
+    && {
+        color: #f0f0f0;
+        font-size: 28px;
+        font-weight: bold;
+        padding: 0;
+        height: auto;
 
-    &:hover,
-    &:focus {
-        color: white;
+        &:hover,
+        &:focus {
+            color: #ffffff;
+        }
     }
 `;
 
@@ -50,9 +52,11 @@ function TopBar(props) {
     return (
         <Header>
             <LogoContainer>
-                <Logo src={logo} alt="logo" />
                 <TitleButton type="link">
-                    <Link to="/home">Market</Link>
+                    <Link to="/home"><Logo src={logo} alt="logo" /></Link>
+                </TitleButton>
+                <TitleButton type="link">
+                    <Link to="/home">Laioffer Marketplace</Link>
                 </TitleButton>
             </LogoContainer>
             {isLoggedIn && (
