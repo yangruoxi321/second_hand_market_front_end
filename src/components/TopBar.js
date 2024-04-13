@@ -6,34 +6,34 @@ import logo from "../assets/images/logo.svg";
 import styled from "styled-components";
 
 const Header = styled.header`
-  background-color: #282c34;
-  min-height: 60px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  padding: 0 20px;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 60px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 0 20px;
+    font-size: calc(10px + 2vmin);
+    color: white;
 `;
 
 const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 `;
 
 const Logo = styled.img`
-  height: 40px;
-  pointer-events: none;
-  margin-right: 10px;
+    height: 40px;
+    pointer-events: none;
+    margin-right: 10px;
 `;
 
 const Title = styled.span`
-  font-size: 24px;
-  font-weight: bold;
+    font-size: 24px;
+    font-weight: bold;
 `;
 
 const ButtonContainer = styled.div`
-  justify-self: end;
+    justify-self: end;
 `;
 
 function TopBar(props) {
@@ -49,7 +49,9 @@ function TopBar(props) {
                 {isLoggedIn ? (
                     <Space>
                         <Button type="primary" icon={<UserOutlined />}>
-                            <Link to="/profile">Profile</Link>
+                            <Link to="/profile" style={{ color: "#fff" }}>
+                                Profile
+                            </Link>
                         </Button>
                         <Button
                             type="primary"
