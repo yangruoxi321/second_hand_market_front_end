@@ -19,6 +19,7 @@ function Main(props) {
   const showHome = () => {
     return isLoggedIn ? <Home /> : <Redirect to="/login" />;
   };
+
   return (
     <div className="main">
       <Switch>
