@@ -6,50 +6,51 @@ import logo from "../assets/images/logo.svg";
 import styled from "styled-components";
 
 const Header = styled.header`
-  background-color: #282c34;
-  min-height: 60px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  padding: 0 20px;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 60px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 0 20px;
+    font-size: calc(10px + 2vmin);
+    color: white;
 `;
 
 const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 `;
 
 const Logo = styled.img`
-  height: 40px;
-  pointer-events: none;
-  margin-right: 10px;
+    height: 40px;
+    pointer-events: none;
+    margin-right: 10px;
 `;
 
 const Title = styled.span`
-  font-size: 24px;
-  font-weight: bold;
+    font-size: 24px;
+    font-weight: bold;
 `;
 
 const ButtonContainer = styled.div`
-  justify-self: end;
+    justify-self: end;
 `;
 
 function TopBar(props) {
     const { isLoggedIn, handleLogout } = props;
-
     return (
         <Header>
             <LogoContainer>
                 <Logo src={logo} alt="logo" />
                 <Title>Market</Title>
             </LogoContainer>
-            <ButtonContainer>
-                {isLoggedIn ? (
+            {isLoggedIn && (
+                <ButtonContainer>
                     <Space>
                         <Button type="primary" icon={<UserOutlined />}>
-                            <Link to="/profile">Profile</Link>
+                            <Link to="/profile" style={{ color: "#fff" }}>
+                                Profile
+                            </Link>
                         </Button>
                         <Button
                             type="primary"
@@ -59,17 +60,8 @@ function TopBar(props) {
                             Logout
                         </Button>
                     </Space>
-                ) : (
-                    <Space>
-                        <Button type="primary">
-                            <Link to="/login">Login</Link>
-                        </Button>
-                        <Button type="primary">
-                            <Link to="/register">Register</Link>
-                        </Button>
-                    </Space>
-                )}
-            </ButtonContainer>
+                </ButtonContainer>
+            )}
         </Header>
     );
 }
