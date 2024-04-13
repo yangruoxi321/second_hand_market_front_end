@@ -36,3 +36,17 @@
 .App-link {
   color: #61dafb;
 }
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+}
+.login-form {
+  width: 300px;
+}
+
+.login-form-button {
+  width: 100%;
+}
