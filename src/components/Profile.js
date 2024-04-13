@@ -45,7 +45,7 @@ function Profile() {
                     <Col span={8}>
                         <Avatar size={120} src={profile.avatarUrl} />
                     </Col>
-                    <Col span={16}>
+                    <Col span={3}>
                         <Title level={2}>{profile.userName}</Title>
                         <Text>Email: {profile.email}</Text>
                         <br />
