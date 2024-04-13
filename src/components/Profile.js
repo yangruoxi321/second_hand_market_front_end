@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL, TOKEN_KEY } from "../constants";
 import { message, Card, Avatar, Row, Col, Typography } from "antd";
+import 'antd/dist/antd.css';
+import { Rate } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -50,11 +52,9 @@ function Profile() {
                         <Text>Wallet: ${profile.wallet}</Text>
                         <br />
                         <Text>
-                            Seller Rate:{" "}
-                            <span style={{ color: "gold", fontWeight: "bold" }}>
-                {profile.sellerRate}
-              </span>
+                            Seller Rate: &nbsp;
                         </Text>
+                        <Rate allowHalf disabled defaultValue={profile.sellerRate}/>;
                     </Col>
                 </Row>
             </Card>

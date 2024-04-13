@@ -3,7 +3,7 @@ import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import "../styles/Login.css"
 import { BASE_URL } from "../constants";
 
 function Login(props) {
@@ -43,8 +43,9 @@ function Login(props) {
     };
 
   return (
-    <Form name="normal_login" className="login-form" onFinish={onFinish}>
-      <Form.Item
+      <div className="login-container">
+        <Form name="normal_login" className="login-form" onFinish={onFinish}>
+            <Form.Item
         name="email"
         rules={[
           {
@@ -81,6 +82,7 @@ function Login(props) {
         Or <Link to="/register">register now!</Link>
       </Form.Item>
     </Form>
+      </div>
   );
 }
 

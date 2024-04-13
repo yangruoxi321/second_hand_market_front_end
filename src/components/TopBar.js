@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Space } from "antd";
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons";
 import logo from "../assets/images/logo.svg";
 import styled from "styled-components";
 
@@ -27,9 +27,17 @@ const Logo = styled.img`
     margin-right: 10px;
 `;
 
-const Title = styled.span`
+const TitleButton = styled(Button)`
+    color: white;
     font-size: 24px;
     font-weight: bold;
+    padding: 0;
+    height: auto;
+
+    &:hover,
+    &:focus {
+        color: white;
+    }
 `;
 
 const ButtonContainer = styled.div`
@@ -38,11 +46,14 @@ const ButtonContainer = styled.div`
 
 function TopBar(props) {
     const { isLoggedIn, handleLogout } = props;
+
     return (
         <Header>
             <LogoContainer>
                 <Logo src={logo} alt="logo" />
-                <Title>Market</Title>
+                <TitleButton type="link">
+                    <Link to="/home">Market</Link>
+                </TitleButton>
             </LogoContainer>
             {isLoggedIn && (
                 <ButtonContainer>
