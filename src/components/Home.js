@@ -16,8 +16,12 @@ function Home(props) {
         fetchPosts();
     }, []);
 
-    const fetchPosts = () => {
-        axios.post(`${BASE_URL}/getAllPost`)
+    const fetchPosts = (formData) => {
+        axios.post(`${BASE_URL}/getAllPost`,formData,{
+            headers: {
+                'token': `${localStorage.getItem(TOKEN_KEY)}`,
+            },
+        })
             .then(res => {
                 if (res.status === 200) {
                     setPosts(res.data);
@@ -28,6 +32,7 @@ function Home(props) {
                 console.log("Fetch error: ", err.message);
             });
     };
+
     const handleSearch = (searchTerm) => {
         axios.post(`${BASE_URL}/search`, {
             search: searchTerm
@@ -58,6 +63,26 @@ function Home(props) {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    const handleDelete = () => {
+        const formData = {
+            id: selectedPost.id
+        };
+        axios.post(`${BASE_URL}/deletePost`, formData, {
+            headers: {
+                'token': `${localStorage.getItem(TOKEN_KEY)}`,
+            },
+        })
+            .then(response => {
+                message.success('Post deleted successfully');
+                fetchPosts();  // 重新加载所有帖子以更新界面
+                setIsModalVisible(false);  // 关闭模态窗口
+            })
+            .catch(error => {
+                message.error('Failed to delete post');
+                console.error('Delete error:', error.message);
+            });
+    }
 
 
     return (
@@ -101,12 +126,15 @@ function Home(props) {
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[
-                        <Button key="back" onClick={handleCancel}>
-                            Return
-                        </Button>,
-                        <Button key="submit" type="primary" onClick={handleOk}>
-                            OK
-                        </Button>,
+                        // <Button key="back" onClick={handleCancel}>
+                        //     Return
+                        // </Button>,
+                        selectedPost && selectedPost.canDelete && (
+                            <Button key="submit" type="primary" onClick={() => handleDelete(selectedPost.id)}>
+                                Delete
+                            </Button>
+                        )
+
                     ]}
                 >
                     {selectedPost && (
