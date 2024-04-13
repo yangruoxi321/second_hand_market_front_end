@@ -26,7 +26,7 @@ function Login(props) {
                     const { token } = res.data; // Access the token here
                     localStorage.setItem('token', token); // Save the token to localStorage
                     handleLoggedIn(token); // Pass the token up to handleLoggedIn
-                    message.success("Login succeed! ");
+                    message.success("Login succeed!");
                 }
             })
             .catch((error) => {
