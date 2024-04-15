@@ -9,7 +9,10 @@ const { Search } = Input;
 function SearchBar(props) {
     const handleSearch = (value) => {
         props.onSearch(value);
-        axios.post(`${BASE_URL}/search`, { search: value }, {
+        axios.post(`${BASE_URL}/search`, {
+            search: value
+        },
+            {
             headers: { "Content-Type": "application/json" }
         })
             .then(res => {

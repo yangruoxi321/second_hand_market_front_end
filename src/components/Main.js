@@ -1,33 +1,33 @@
 import React, { useState } from "react";
-import { Route, Switch, Redirect } from "react-router";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import Login from "./Login";
 import Register from "./Register";
 import Home from "./Home";
+import Profile from "./Profile";
 
 function Main(props) {
   const { isLoggedIn, handleLoggedIn } = props;
 
-  const showLogin = () => {
-    return isLoggedIn ? (
-      <Redirect to="/home" />
-    ) : (
-      <Login handleLoggedIn={handleLoggedIn} />
-    );
-  };
-
-  const showHome = () => {
-    return isLoggedIn ? <Home /> : <Redirect to="/login" />;
-  };
   return (
-    <div className="main">
-      <Switch>
-        <Route path="/" exact render={showLogin} />
-        <Route path="/login" render={showLogin} />
-        <Route path="/register" component={Register} />
-        <Route path="/home" render={showHome} />
-      </Switch>
-    </div>
+      <div className="main">
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route
+              path="/login"
+              element={isLoggedIn ? <Navigate to="/home" replace /> : <Login handleLoggedIn={handleLoggedIn} />}
+          />
+          <Route path="/register" element={<Register />} />
+          <Route
+              path="/home"
+              element={isLoggedIn ? <Home /> : <Navigate to="/login" replace />}
+          />
+          <Route
+              path="/profile"
+              element={isLoggedIn ? <Profile /> : <Navigate to="/login" replace />}
+          />
+        </Routes>
+      </div>
   );
 }
 
