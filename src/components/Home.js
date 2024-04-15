@@ -84,13 +84,41 @@ function Home(props) {
             });
     }
 
-
+    const handlePurchase = (formData) =>{
+        // const formData = {
+        //     id: selectedPost.id
+        // };
+        axios.post(`${BASE_URL}/purchase`,formData, {
+            headers: {
+                'token': `${localStorage.getItem(TOKEN_KEY)}`,
+                'post_id': selectedPost.id
+            },
+        })
+            .then(response => {
+                message.success('Purchase successfully');
+                fetchPosts();  // 重新加载所有帖子以更新界面
+                setIsModalVisible(false);  // 关闭模态窗口
+            })
+            .catch(error => {
+                if (error.response) {
+                    // 处理错误响应
+                    console.log("Purchase failed: ", error.response.data.message);
+                    message.error("Purchase failed: " + error.response.data.message);
+                } else {
+                    // 处理其他错误
+                    console.log("Purchase failed: ", error.message);
+                    message.error("Purchase failed!");
+                }
+            });
+    }
     return (
         <div className="home">
             <div className="search-create-container">
                 <SearchBar onSearch={handleSearch} />
-                <CreatePostButton />
+                <CreatePostButton onPostCreated={fetchPosts}/>
             </div>
+
+
             <div className="display">
                 <Row gutter={[16, 16]}>
                     {posts.map(post => (
@@ -126,15 +154,16 @@ function Home(props) {
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[
-                        // <Button key="back" onClick={handleCancel}>
-                        //     Return
-                        // </Button>,
                         selectedPost && selectedPost.canDelete && (
                             <Button key="submit" type="primary" onClick={() => handleDelete(selectedPost.id)}>
                                 Delete
                             </Button>
+                        ),
+                        selectedPost && !selectedPost.canDelete && (
+                            <Button key="submit" type="primary" onClick={() => handlePurchase(selectedPost.id)}>
+                                Buy
+                            </Button>
                         )
-
                     ]}
                 >
                     {selectedPost && (
@@ -156,6 +185,8 @@ function Home(props) {
                     )}
                 </Modal>
             </div>
+
+
         </div>
     );
 
