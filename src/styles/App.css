@@ -50,3 +50,19 @@
 .login-form-button {
   width: 100%;
 }
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+}
+
+.register {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.register-btn {
+  width: 100%;
+}
