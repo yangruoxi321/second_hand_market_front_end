@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {message, Modal, Row, Col, Button} from "antd";
+import {message, Modal, Row, Col, Button,Rate} from "antd";
 import axios from "axios";
 
 import SearchBar from "./SearchBar";
@@ -11,6 +11,9 @@ function Home(props) {
     const [posts, setPosts] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
+
+    const [rating, setRating] = useState(0);
+    const [isRatingModalVisible, setIsRatingModalVisible] = useState(false);
 
     useEffect(() => {
         fetchPosts();
@@ -84,22 +87,20 @@ function Home(props) {
             });
     }
 
-    const handlePurchase = (formData) =>{
-        // const formData = {
-        //     id: selectedPost.id
-        // };
-        axios.post(`${BASE_URL}/purchase`,formData, {
-            headers: {
-                'token': `${localStorage.getItem(TOKEN_KEY)}`,
-                'post_id': selectedPost.id
-            },
-        })
-            .then(response => {
-                message.success('Purchase successfully');
-                fetchPosts();  // 重新加载所有帖子以更新界面
-                setIsModalVisible(false);  // 关闭模态窗口
+    const handlePurchase = (formData) => {
+        axios
+            .post(`${BASE_URL}/purchase`, formData, {
+                headers: {
+                    token: `${localStorage.getItem(TOKEN_KEY)}`,
+                    post_id: selectedPost.id,
+                },
             })
-            .catch(error => {
+            .then((response) => {
+                message.success("Purchase successfully");
+                setIsModalVisible(false); // 关闭详情模态窗口
+                setIsRatingModalVisible(true); // 打开评分模态窗口
+            })
+            .catch((error) => {
                 if (error.response) {
                     // 处理错误响应
                     console.log("Purchase failed: ", error.response.data.message);
@@ -110,7 +111,35 @@ function Home(props) {
                     message.error("Purchase failed!");
                 }
             });
-    }
+    };
+
+    const handleRating = () => {
+        axios
+            .post(
+                `${BASE_URL}/rateSeller`,
+                {},
+                {
+                    headers: {
+                        token: `${localStorage.getItem(TOKEN_KEY)}`,
+                        postId: selectedPost.id,
+                        rate: rating,
+                    },
+                }
+            )
+            .then((response) => {
+                message.success("Rating submitted successfully");
+                fetchPosts(); // 重新加载所有帖子以更新界面
+                setIsRatingModalVisible(false); // 关闭评分模态窗口
+            })
+            .catch((error) => {
+                message.error("Failed to submit rating");
+                console.error("Rating error:", error.message);
+            });
+    };
+
+    const handleRatingModalCancel = () => {
+        setIsRatingModalVisible(false);
+    };
     return (
         <div className="home">
             <div className="search-create-container">
@@ -184,9 +213,15 @@ function Home(props) {
                         </div>
                     )}
                 </Modal>
+                <Modal
+                    title="Rate the Seller"
+                    visible={isRatingModalVisible}
+                    onOk={handleRating}
+                    onCancel={handleRatingModalCancel}
+                >
+                    <Rate allowHalf onChange={(value) => setRating(value)} />
+                </Modal>
             </div>
-
-
         </div>
     );
 
