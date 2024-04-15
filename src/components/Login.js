@@ -3,7 +3,6 @@ import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
-//import "../styles/Login.css"
 import "../styles/App.css"
 import { BASE_URL } from "../constants";
 
