@@ -2,56 +2,84 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL, TOKEN_KEY } from "../constants";
-import { message, Card, Avatar, Row, Col, Typography, Modal } from "antd";
-import 'antd/dist/antd.css';
-import { Rate } from 'antd';
+import {
+    message, Card, Avatar, Row, Col, Typography, Modal, Spin, Statistic,
+    Tabs, List, Tag, Tooltip, Button
+} from "antd";
+import {
+    ShoppingOutlined, DollarOutlined, StarOutlined,
+    MailOutlined, UserOutlined, WalletOutlined
+} from "@ant-design/icons";
+import styled from 'styled-components';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
+const { TabPane } = Tabs;
+
+const ProfileContainer = styled.div`
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+`;
+
+const ProfileCard = styled(Card)`
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`;
+
+const StatsCard = styled(Card)`
+  border-radius: 15px;
+  margin-top: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+`;
+
+const ItemCard = styled(Card)`
+  border-radius: 10px;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+`;
 
 function Profile() {
     const [profile, setProfile] = useState(null);
     const [boughtItems, setBoughtItems] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchProfile();
         fetchBoughtItem();
     }, []);
 
-    const fetchProfile = (formData) => {
-        axios
-            .post(`${BASE_URL}/profile`, formData, {
-                headers: {
-                    token: `${localStorage.getItem(TOKEN_KEY)}`,
-                },
-            })
-            .then((res) => {
-                if (res.status === 200) {
-                    setProfile(res.data);
-                }
-            })
-            .catch((err) => {
-                message.error("Unable to load profile");
-                console.log("Fetch error: ", err.message);
+    const fetchProfile = async () => {
+        try {
+            const res = await axios.post(`${BASE_URL}/profile`, {}, {
+                headers: { token: localStorage.getItem(TOKEN_KEY) },
             });
+            setProfile(res.data);
+        } catch (err) {
+            message.error("Unable to load profile");
+            console.log("Fetch error: ", err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const fetchBoughtItem = (formData) => {
-        axios.post(`${BASE_URL}/purchasedItem`, formData, {
-            headers: {
-                'token': `${localStorage.getItem(TOKEN_KEY)}`,
-            },
-        })
-            .then(res => {
-                if (res.status === 200) {
-                    setBoughtItems(res.data);
-                }
-            })
-            .catch(err => {
-                message.error("Unable to load bought items");
-                console.log("Fetch error: ", err.message);
+    const fetchBoughtItem = async () => {
+        try {
+            const res = await axios.post(`${BASE_URL}/purchasedItem`, {}, {
+                headers: { token: localStorage.getItem(TOKEN_KEY) },
             });
+            setBoughtItems(res.data);
+        } catch (err) {
+            message.error("Unable to load bought items");
+            console.log("Fetch error: ", err.message);
+        }
     };
 
     const showItemDetails = (item) => {
@@ -59,105 +87,136 @@ function Profile() {
         setIsModalVisible(true);
     };
 
-    const handleOk = () => {
-        setIsModalVisible(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-
-    if (!profile) {
-        return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <ProfileContainer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Spin size="large" />
+            </ProfileContainer>
+        );
     }
 
     return (
-        <div style={{ padding: "24px" }}>
-            <Card>
-                <Row>
-                    <Col span={8}>
-                        <Avatar size={120} src={profile.avatarUrl} />
+        <ProfileContainer>
+            <ProfileCard>
+                <Row gutter={24} align="middle">
+                    <Col xs={24} sm={8} md={6}>
+                        <Avatar size={150} src={profile.avatarUrl} icon={<UserOutlined />} />
                     </Col>
-                    <Col span={16}>
-                        <Title level={2} style={{ textAlign: "left" }}>{profile.userName}</Title>
-                        <div style={{ textAlign: "left" }}>
-                            <Text style={{ fontSize: "18px" }}>Email: {profile.email}</Text>
-                            <br />
-                            <Text style={{ fontSize: "18px" }}>Wallet: ${profile.wallet}</Text>
-                            <br />
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                <Text style={{ fontSize: "18px" }}>
-                                    Seller Rate: &nbsp;
-                                </Text>
-                                <Rate allowHalf disabled defaultValue={profile.sellerRate} />
-                            </div>
-                        </div>
+                    <Col xs={24} sm={16} md={18}>
+                        <Title level={2}>{profile.userName}</Title>
+                        <Paragraph>
+                            <MailOutlined /> {profile.email}
+                        </Paragraph>
+                        <Paragraph>
+                            <WalletOutlined /> Wallet: ${profile.wallet}
+                        </Paragraph>
+                        <Paragraph>
+                            <StarOutlined /> Seller Rating: {profile.sellerRate.toFixed(1)}
+                        </Paragraph>
                     </Col>
                 </Row>
-            </Card>
+            </ProfileCard>
 
-            <div style={{ marginTop: "24px" }}>
-                <Title level={3}>Bought Items</Title>
-                <Row gutter={[16, 16]}>
-                    {boughtItems.map(item => (
-                        <Col
-                            key={item.id}
-                            xs={24} sm={12} md={8} lg={6}
-                            onClick={() => showItemDetails(item)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <Card
-                                hoverable
-                                cover={
-                                    <div style={{ height: '200px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <img
-                                            src={item.url}
-                                            alt={item.itemName}
-                                            style={{
-                                                maxHeight: '100%',
-                                                maxWidth: '100%',
-                                                objectFit: 'contain',
-                                                objectPosition: 'center'
-                                            }}
-                                        />
-                                    </div>
-                                }
-                            >
-                                <Card.Meta
-                                    title={item.itemName || 'No Name'}
-                                    description={`Price: $${item.price}`}
-                                />
-                            </Card>
-                        </Col>
-                    ))}
+            <StatsCard>
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <Statistic
+                            title="Items Bought"
+                            value={boughtItems.length}
+                            prefix={<ShoppingOutlined />}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <Statistic
+                            title="Total Spent"
+                            value={boughtItems.reduce((acc, item) => acc + item.price, 0)}
+                            prefix={<DollarOutlined />}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <Statistic
+                            title="Seller Rating"
+                            value={profile.sellerRate}
+                            prefix={<StarOutlined />}
+                        />
+                    </Col>
                 </Row>
-            </div>
+            </StatsCard>
+
+            <Tabs defaultActiveKey="1" style={{ marginTop: 24 }}>
+                <TabPane tab="Bought Items" key="1">
+                    <List
+                        grid={{
+                            gutter: 16,
+                            xs: 1,
+                            sm: 2,
+                            md: 3,
+                            lg: 4,
+                            xl: 4,
+                            xxl: 6,
+                        }}
+                        dataSource={boughtItems}
+                        renderItem={item => (
+                            <List.Item>
+                                <ItemCard
+                                    hoverable
+                                    cover={
+                                        <img
+                                            alt={item.itemName}
+                                            src={item.url}
+                                            style={{ height: 200, objectFit: 'cover' }}
+                                        />
+                                    }
+                                    onClick={() => showItemDetails(item)}
+                                >
+                                    <Card.Meta
+                                        title={item.itemName}
+                                        description={
+                                            <>
+                                                <Tag color="blue">${item.price}</Tag>
+                                            </>
+                                        }
+                                    />
+                                </ItemCard>
+                            </List.Item>
+                        )}
+                    />
+                </TabPane>
+            </Tabs>
 
             <Modal
-                title="Item Details"
+                title={selectedItem?.itemName}
                 visible={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
+                onCancel={() => setIsModalVisible(false)}
+                footer={null}
+                width={700}
             >
                 {selectedItem && (
-                    <div>
-                        <img
-                            src={selectedItem.url}
-                            alt={selectedItem.itemName}
-                            style={{
-                                maxHeight: '450px',
-                                maxWidth: '100%',
-                                objectFit: 'contain',
-                                marginBottom: '20px',
-                            }}
-                        />
-                        <p>Item Name: {selectedItem.itemName}</p>
-                        <p>Description: {selectedItem.itemDescription}</p>
-                        <p>Price: ${selectedItem.price}</p>
-                    </div>
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <img
+                                src={selectedItem.url}
+                                alt={selectedItem.itemName}
+                                style={{ width: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <Title level={4}>{selectedItem.itemName}</Title>
+                            <Paragraph>{selectedItem.itemDescription}</Paragraph>
+                            <Statistic
+                                title="Price"
+                                value={selectedItem.price}
+                                prefix="$"
+                                style={{ marginBottom: 16 }}
+                            />
+                            <Button type="primary" icon={<ShoppingOutlined />}>
+                                Buy Again
+                            </Button>
+                        </Col>
+                    </Row>
                 )}
             </Modal>
-        </div>
+        </ProfileContainer>
     );
 }
 
